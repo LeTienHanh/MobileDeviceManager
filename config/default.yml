@@ -1,0 +1,14 @@
+development:
+  port: 6969
+  database: bonita
+  username: bonita
+  password: bpm
+  options:
+    host: 127.0.0.1
+    dialect: 'mysql'
+    port: 3306
+  redisOptions:
+    host: '127.0.0.1'
+    port: 6379
+    db: 15
+    pass: ''
