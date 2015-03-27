@@ -19,6 +19,8 @@ var express = require('express'),
     methodOverride = require('method-override'),
 //ROUTE
     app = express();
+    var server = require('http').Server(app),
+        io = require('socket.io')(server);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -41,6 +43,29 @@ app.use(passport.session());
 /// error handlers
 // development error handler
 // will print stacktrace
+
+// ============================ socket io ===========================
+io.on('connection', function (socket) {
+    socket.emit('news', { hello: 'Hanh Map' });
+
+    socket.on('private message', function (msg, from) {
+        console.log('I received a private message by ', from, ' saying ', msg);
+    });
+
+    socket.on('testSendCallBack', function(name, fn){
+        console.log(name);
+        fn('Hanh');
+    });
+
+    socket.on('disconnect', function () {
+        io.emit('user disconnected');
+    });
+});
+
+app.get('/', function (req, res) {
+    res.sendfile(__dirname + '/index.html');
+});
+
 if (app.get('env') == 'development') {
     app.use(function (err, req, res, next) {
         res.status(err.status || 500);
@@ -61,6 +86,6 @@ app.use(function (err, req, res, next) {
     });
 });
 
-app.listen(CONFIG.port || 3000);
+server.listen(CONFIG.port || 3000);
 
 
